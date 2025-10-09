@@ -1,0 +1,27 @@
+{
+  "name": "arbitration-platform-example",
+  "version": "1.0.0",
+  "description": "Anonymous Arbitration Platform - Imported dApp example",
+  "main": "index.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "deploy": "hardhat run scripts/deploy.js --network sepolia",
+    "interact": "node scripts/interact.js",
+    "test": "hardhat test"
+  },
+  "keywords": [
+    "arbitration",
+    "fhevm",
+    "privacy",
+    "blockchain"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@fhevm/sdk": "workspace:*",
+    "ethers": "^6.9.0"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.19.4"
+  }
+}
