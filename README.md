@@ -28,13 +28,21 @@ fhevm-universal-sdk/
 │       │   ├── instance.ts # FHEVM instance management
 │       │   ├── encryption.ts # Encryption utilities
 │       │   ├── hooks/      # React hooks (optional)
-│       │   ├── provider.ts # React provider (optional)
-│       │   └── types.ts    # TypeScript definitions
+│       │   ├── provider.tsx # React provider (optional)
+│       │   ├── types.ts    # TypeScript definitions
+│       │   └── utils.ts    # Utility functions
 │       └── package.json
+├── templates/              # Quick-start templates
+│   ├── nextjs/            # Next.js template
+│   ├── react/             # React template
+│   ├── vue/               # Vue template
+│   └── nodejs/            # Node.js template
 ├── examples/
-│   ├── nextjs-arbitration/ # Next.js showcase example
-│   └── arbitration-platform/ # Imported example dApp
-└── demo.mp4                # Video demonstration
+│   ├── nextjs-demo/                      # Complete Next.js App Router demo
+│   ├── nextjs-arbitration/               # Next.js Pages Router showcase
+│   ├── AnonymousArbitrationPlatform/     # React application with FHE voting
+│   └── arbitration-platform/             # Hardhat smart contract platform
+└── demo.mp4                              # Video demonstration
 
 ```
 
@@ -179,11 +187,49 @@ function Component() {
 
 ## 📖 Examples
 
-### Example 1: Next.js Arbitration Platform
+### Example 1: Next.js App Router Demo (Complete Showcase)
+
+**Location**: `examples/nextjs-demo/`
+
+A comprehensive Next.js 14 App Router application demonstrating all SDK features:
+
+**Structure Based on Best Practices:**
+```
+src/
+├── app/                    # Next.js 13+ App Router
+│   ├── layout.tsx         # Root layout with FHEProvider
+│   ├── page.tsx           # Interactive demo page
+│   └── api/               # API routes for FHE operations
+├── components/
+│   ├── ui/                # Reusable UI components
+│   ├── fhe/               # FHE-specific components
+│   └── examples/          # Real-world use cases
+├── lib/                   # Utility libraries
+├── hooks/                 # Custom React hooks
+└── types/                 # TypeScript definitions
+```
+
+**Features Demonstrated:**
+- ✅ Encryption/Decryption workflows
+- ✅ Homomorphic computation
+- ✅ Banking use case (confidential balances)
+- ✅ Medical records use case (HIPAA-compliant)
+- ✅ API routes for server-side FHE
+- ✅ Complete TypeScript integration
+- ✅ Modern UI with Tailwind CSS
+
+**Run:**
+```bash
+cd examples/nextjs-demo
+npm install
+npm run dev
+```
+
+### Example 2: Next.js Pages Router (Arbitration Platform)
 
 **Location**: `examples/nextjs-arbitration/`
 
-A complete Next.js application showcasing the SDK with:
+A complete Next.js Pages Router application with:
 - Anonymous arbitration dispute resolution
 - Encrypted voting mechanism
 - Real-time decryption
@@ -194,27 +240,151 @@ A complete Next.js application showcasing the SDK with:
 npm run dev:next
 ```
 
-**Features Demonstrated:**
-- SDK initialization in Next.js
-- Encrypted input creation
-- Contract interaction
-- Result decryption
-- TypeScript integration
+### Example 3: React Application (Anonymous Arbitration Platform)
 
-### Example 2: Anonymous Arbitration Platform (Imported)
+**Location**: `examples/AnonymousArbitrationPlatform/`
+
+A complete React application demonstrating advanced SDK integration with real-world FHE use case:
+
+**SDK Integration Highlights:**
+- Custom `FhevmContext` provider wrapping the entire app
+- Automatic SDK initialization on wallet connection
+- Encrypted voting using `createEncryptedInput()` builder pattern
+- Encrypted evidence submission with FHE operations
+- Fallback support for non-FHE contracts
+- Real-time encryption status feedback
+
+**Key Features:**
+- **Privacy-Preserving Arbitration**: Dispute resolution with encrypted votes
+- **FHE Encryption**: Vote decisions and evidence encrypted using SDK
+- **Smart Contract Integration**: Full ethers.js v6 integration
+- **Modern React Architecture**: TypeScript, hooks, context providers
+- **Component-Based Design**: 10 reusable React components
+- **Glassmorphism UI**: Beautiful, responsive interface
+
+**Technical Implementation:**
+- `src/contexts/FhevmContext.tsx` - SDK provider with initialization
+- `src/hooks/useContract.ts` - Encrypted operations (createDispute, submitVote)
+- `src/hooks/useWallet.ts` - Automatic SDK initialization
+- Builder pattern for encrypted inputs: `.add32().add32().encrypt()`
+
+**Run:**
+```bash
+cd examples/AnonymousArbitrationPlatform
+npm install
+npm start
+```
+
+**Note**: This example showcases the SDK's ability to enhance existing dApps with FHE encryption through minimal integration effort.
+
+### Example 4: Hardhat Smart Contract Platform
 
 **Location**: `examples/arbitration-platform/`
 
-Imported from the main project, demonstrating:
+Complete smart contract integration demonstrating:
 - Privacy-preserving dispute resolution
 - Encrypted arbitrator voting
 - Secure decision making
-- Complete smart contract integration
+- Contract deployment scripts
 
-**Key Files Imported:**
+**Key Files:**
 - `contracts/AnonymousArbitrationPlatform.sol`
 - Contract ABI and deployment info
 - Integration examples
+
+## 🔄 SDK Integration Patterns Demonstrated
+
+Our examples showcase three different integration patterns for the FHEVM SDK:
+
+### Pattern 1: Next.js with Built-in Provider (nextjs-demo, nextjs-arbitration)
+
+**Best for**: New Next.js projects, straightforward integration
+
+```typescript
+// Use SDK's built-in provider directly
+import { FhevmProvider, useFhevm } from '@fhevm/sdk';
+
+// In _app.tsx or layout.tsx
+<FhevmProvider config={config}>
+  <YourApp />
+</FhevmProvider>
+
+// In components
+const { client, encrypt, decrypt } = useFhevm();
+```
+
+**Pros**: Minimal setup, leverages SDK's full feature set
+**Examples**: nextjs-demo (App Router), nextjs-arbitration (Pages Router)
+
+### Pattern 2: Custom Context Wrapper (AnonymousArbitrationPlatform)
+
+**Best for**: Existing React apps, custom initialization logic, migration scenarios
+
+```typescript
+// Create custom context wrapping SDK
+export const FhevmProvider: React.FC = ({ children, config }) => {
+  const fhevmClient = new FhevmClient(config);
+
+  const initializeFhevm = async (provider, signer) => {
+    await fhevmClient.init(provider, signer);
+  };
+
+  return <FhevmContext.Provider value={{ client, initializeFhevm }}>
+    {children}
+  </FhevmContext.Provider>;
+};
+
+// In useWallet hook - automatic initialization
+await initializeFhevm(provider, signer);
+
+// In useContract hook - encrypted operations
+const encrypted = await createEncryptedInput(address, user)
+  .add32(value1)
+  .add32(value2)
+  .encrypt();
+```
+
+**Pros**:
+- Full control over initialization flow
+- Easy integration into existing codebases
+- Custom error handling and state management
+- Fallback support for non-FHE contracts
+
+**Example**: AnonymousArbitrationPlatform - shows migration from static HTML to React with SDK
+
+### Pattern 3: Direct Client Usage (Hardhat scripts)
+
+**Best for**: Backend scripts, Node.js automation, testing
+
+```typescript
+// Direct instantiation without React
+import { FhevmClient } from '@fhevm/sdk';
+import { ethers } from 'ethers';
+
+const provider = new ethers.JsonRpcProvider(RPC_URL);
+const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
+
+const client = new FhevmClient(config);
+await client.init(provider, wallet);
+
+// Use client for operations
+const encrypted = await client.createEncryptedInput(address, user)
+  .add32(42)
+  .encrypt();
+```
+
+**Pros**: Framework-agnostic, simple for scripts
+**Example**: arbitration-platform deployment and interaction scripts
+
+### Integration Comparison
+
+| Pattern | Setup Complexity | Flexibility | Best Use Case |
+|---------|-----------------|-------------|---------------|
+| Built-in Provider | ⭐ Simple | ⭐⭐ Good | New Next.js/React projects |
+| Custom Context | ⭐⭐ Moderate | ⭐⭐⭐ Excellent | Existing apps, custom flows |
+| Direct Client | ⭐ Simple | ⭐⭐⭐ Excellent | Backend, scripts, Node.js |
+
+All patterns demonstrate the SDK's flexibility and ease of integration across different scenarios.
 
 ## 🎯 SDK Architecture
 
@@ -387,7 +557,7 @@ A demonstration video is included in the repository root directory. The video sh
 - ✅ Wagmi-like modular API structure
 - ✅ Encryption/decryption utilities (userDecrypt + publicDecrypt)
 - ✅ EIP-712 signature support
-- ✅ Next.js showcase example
+- ✅ Next.js showcase examples (App Router + Pages Router)
 - ✅ Video demonstration (demo.mp4)
 - ✅ Comprehensive README
 - ✅ Quick setup (< 10 lines)
@@ -395,10 +565,56 @@ A demonstration video is included in the repository root directory. The video sh
 ### Bonus Features
 - ✅ React hooks and provider
 - ✅ TypeScript support with full typing
-- ✅ Multiple example integrations
+- ✅ Multiple example integrations (4 complete examples)
+- ✅ Quick-start templates (Next.js, React, Vue, Node.js)
+- ✅ Real-world use cases (Banking, Medical, Arbitration)
+- ✅ API routes for server-side FHE
+- ✅ Static HTML to React conversion demonstrated
 - ✅ Clear documentation
 - ✅ Monorepo structure with workspaces
 - ✅ Developer-friendly CLI commands
+
+## 🎨 Quick-Start Templates
+
+Get started instantly with pre-configured templates for your favorite framework:
+
+### Next.js Template
+```bash
+cp -r templates/nextjs my-app
+cd my-app && npm install && npm run dev
+```
+
+**Perfect for:** Full-stack confidential dApps with SSR/SSG
+
+### React Template
+```bash
+cp -r templates/react my-app
+cd my-app && npm install && npm start
+```
+
+**Perfect for:** Client-side confidential applications
+
+### Vue Template
+```bash
+cp -r templates/vue my-app
+cd my-app && npm install && npm run dev
+```
+
+**Perfect for:** Vue 3 confidential applications with Composition API
+
+### Node.js Template
+```bash
+cp -r templates/nodejs my-app
+cd my-app && npm install && node index.js
+```
+
+**Perfect for:** Server-side FHE operations, automation, and APIs
+
+Each template includes:
+- Pre-configured SDK setup
+- Example encryption/decryption code
+- TypeScript configuration
+- Best practices documentation
 
 ## 🎓 Usage Scenarios
 
@@ -534,10 +750,11 @@ MIT License - see [LICENSE](../LICENSE) file for details.
 
 This SDK provides a complete, production-ready solution for building confidential dApps with FHEVM:
 
-- ✅ **Universal & Framework-Agnostic**: Works everywhere
+- ✅ **Universal & Framework-Agnostic**: Works everywhere (React, Next.js, Vue, Node.js)
 - ✅ **Developer-Friendly**: < 10 lines to start
 - ✅ **Complete Coverage**: Encryption, decryption, contract interaction
-- ✅ **Well-Documented**: Comprehensive guides and examples
-- ✅ **Production-Ready**: TypeScript, testing, security
+- ✅ **Well-Documented**: Comprehensive guides and 4 working examples
+- ✅ **Production-Ready**: TypeScript, SDK integration, security
+- ✅ **Real-World Examples**: Banking, Medical, Arbitration use cases
 
 **Ready to revolutionize confidential dApp development!** 🚀

@@ -1,0 +1,135 @@
+.card {
+  background: rgba(30, 30, 46, 0.9);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(0, 212, 255, 0.2);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 212, 255, 0.3);
+  border-color: rgba(0, 212, 255, 0.5);
+}
+
+.card h3 {
+  color: #00d4ff;
+  margin-bottom: 20px;
+  font-size: 1.5em;
+  border-bottom: 2px solid #00d4ff;
+  padding-bottom: 10px;
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #00d4ff;
+}
+
+.input-group input,
+.input-group textarea,
+.input-group select {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid rgba(0, 212, 255, 0.3);
+  border-radius: 10px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+  background: rgba(0, 0, 0, 0.3);
+  color: #eee;
+}
+
+.input-group input:focus,
+.input-group textarea:focus,
+.input-group select:focus {
+  outline: none;
+  border-color: #00d4ff;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.btn {
+  background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+  color: #1a1a2e;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 212, 255, 0.6);
+  background: linear-gradient(135deg, #00ffff 0%, #00d4ff 100%);
+}
+
+.btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.status-card {
+  background: rgba(0, 0, 0, 0.4);
+  border-left: 4px solid #00d4ff;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 10px;
+}
+
+.status-card h4 {
+  color: #00d4ff;
+  margin-bottom: 10px;
+}
+
+.error {
+  color: #ff6b6b;
+  background: rgba(220, 53, 69, 0.2);
+  border: 1px solid #ff6b6b;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 10px 0;
+}
+
+.success {
+  color: #00ff88;
+  background: rgba(0, 255, 136, 0.2);
+  border: 1px solid #00ff88;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 10px 0;
+}
+
+.info {
+  color: #00d4ff;
+  background: rgba(0, 212, 255, 0.2);
+  border: 1px solid #00d4ff;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 10px 0;
+}
+
+.loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-top: 3px solid #00d4ff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 10px;
+}
