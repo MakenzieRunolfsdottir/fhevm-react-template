@@ -17,6 +17,8 @@
 - ✅ **Modular & Reusable**: Clean, composable components
 - ✅ **Production Ready**: Optimized for real-world applications
 
+**Live Demo**: https://fhe-arbitration-platform.vercel.app/  demo.mp4
+
 ## 📦 What's Included
 
 ```
